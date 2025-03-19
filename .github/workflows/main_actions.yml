@@ -47,11 +47,11 @@ jobs:
 
       - name: Preview pattern
         run: |
-          python emoji_contributions.py preview --preview ${{ github.event.inputs.pattern }}
+          python main.py preview --preview ${{ github.event.inputs.pattern }}
 
       - name: Run emoji pattern script
         run: |
-          python emoji_contributions.py ${{ github.event.inputs.pattern }} \
+          python main.py ${{ github.event.inputs.pattern }} \
             ${{ github.event.inputs.start_date != '' && format('--start-date {0}', github.event.inputs.start_date) || '' }} \
             --intensity ${{ github.event.inputs.intensity }}
 
