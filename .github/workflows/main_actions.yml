@@ -1,4 +1,4 @@
-name: GitHub Emoji Contributions
+name: commit go brrrrr
 
 on:
   workflow_dispatch:
