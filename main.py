@@ -142,7 +142,6 @@ def calculate_dates(pattern_name, start_date=None):
 
 def create_pattern(pattern_name, start_date=None, intensity_multiplier=1):
     """Create commits for the specified pattern"""
-    setup_repo()
     commit_plan = calculate_dates(pattern_name, start_date)
     
     total_commits = 0
