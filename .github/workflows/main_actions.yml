@@ -1,0 +1,61 @@
+name: GitHub Emoji Contributions
+
+on:
+  workflow_dispatch:
+    inputs:
+      pattern:
+        description: 'Emoji pattern to create'
+        required: true
+        default: 'heart'
+        type: choice
+        options:
+          - heart
+          - heart_3d
+          - smile
+          - star
+          - thumbsup
+          - cat
+          - fire
+          - rocket
+      start_date:
+        description: 'Start date (YYYY-MM-DD), leave empty for current date aligned to Sunday'
+        required: false
+      intensity:
+        description: 'Intensity multiplier (0.5 for lighter, 2.0 for more intense)'
+        required: true
+        default: '1.0'
+        type: string
+
+jobs:
+  create-pattern:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+
+      - name: Preview pattern
+        run: |
+          python emoji_contributions.py preview --preview ${{ github.event.inputs.pattern }}
+
+      - name: Run emoji pattern script
+        run: |
+          python emoji_contributions.py ${{ github.event.inputs.pattern }} \
+            ${{ github.event.inputs.start_date != '' && format('--start-date {0}', github.event.inputs.start_date) || '' }} \
+            --intensity ${{ github.event.inputs.intensity }}
+
+      - name: Push changes
+        run: |
+          git remote set-url origin https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}
+          git push
