@@ -81,7 +81,7 @@ The patterns use 5 different intensity levels:
 Before creating a pattern, you can preview it in the console:
 
 ```bash
-python emoji_contributions.py preview --preview heart_3d
+python main.py preview --preview heart_3d
 ```
 
 This will show you a text-based representation of how the pattern will look in your contribution graph.
