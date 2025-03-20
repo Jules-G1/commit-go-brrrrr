@@ -34,17 +34,17 @@ You can also run the script locally:
 
 ```bash
 # Clone your forked repository
-git clone https://github.com/YOUR_USERNAME/github-emoji-contributions.git
-cd github-emoji-contributions
+git clone https://github.com/YOUR_USERNAME/commit-go-brrrrr.git
+cd commit-go-brrrrr
 
 # List available patterns
-python emoji_contributions.py list
+python main.py list
 
 # Preview a pattern
-python emoji_contributions.py preview --preview heart_3d
+python main.py preview --preview heart_3d
 
 # Create a pattern
-python emoji_contributions.py heart_3d --intensity 1.5
+python main.py heart_3d --intensity 1.5
 ```
 
 ## 🎭 Available Patterns
