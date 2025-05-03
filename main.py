@@ -5,84 +5,121 @@ import random
 import subprocess
 from pathlib import Path
 
-# Dictionary of emoji patterns with intensity levels
+# Dictionary of emoji patterns with intensity levels - ROTATED 90° CLOCKWISE
+# Each pattern is now defined with days of week (Sun-Sat) as rows and weeks as columns
 # 0: No commits (white)
 # 1: Light intensity (1-2 commits)
 # 2: Medium intensity (3-5 commits)
 # 3: High intensity (6-9 commits)
 # 4: Maximum intensity (10+ commits)
 EMOJI_PATTERNS = {
+    "diamond": [
+        "0004000",
+        "0044400",
+        "0444440",
+        "4444444",
+        "0444440",
+        "0044400",
+        "0004000"
+    ],
     "heart": [
-        "0220220",
-        "2343432",
-        "2444442",
-        "1344431",
-        "0233320",
-        "0022200",
+        "0404040",
+        "4444444",
+        "4444444",
+        "0444440",
+        "0044400",
+        "0004000",
+        "0000000",
+    ],
+    "arrow_right": [
+        "0001000",
+        "0001100",
+        "0001110",
+        "1111111",
+        "0001110",
+        "0001100",
         "0001000",
     ],
-    "smile": [
-        "0033300",
-        "0244420",
-        "3000043",
+    "smiley": [
+        "0000000",
+        "0040400",
+        "0040400",
+        "0000000",
         "4000004",
-        "3200023",
-        "0244420",
-        "0033300",
+        "0400040",
+        "0044400",
     ],
     "star": [
         "0004000",
-        "0024200",
-        "2344432",
-        "3444443",
-        "0233320",
-        "0022200",
-        "0001000",
-    ],
-    "thumbsup": [
-        "0033300",
+        "0044400",
+        "0444440",
+        "4444444",
         "0044400",
         "0044400",
-        "2044400",
-        "3444400",
-        "0442000",
-        "0230000",
+        "0044400",
     ],
-    "cat": [
-        "3000003",
-        "4200024",
-        "4004004",
-        "4000004",
-        "3022203",
-        "0244420",
-        "0033300",
-    ],
-    "heart_3d": [
-        "0110110",
-        "1331331",
-        "3443443",
-        "3444443",
-        "0344430",
-        "0033300",
-        "0001000",
-    ],
-    "fire": [
-        "0001000",
-        "0012100",
-        "0123210",
-        "1234321",
-        "2344432",
-        "3444443",
-        "0333330",
-    ],
-    "rocket": [
-        "0001000",
-        "0012100",
-        "0123210",
+    "letter_A": [
         "0004000",
         "0044400",
-        "0344430",
-        "3000003",
+        "0440440",
+        "4444444",
+        "4400044",
+        "4400044",
+        "0000000",
+    ],
+    "wave": [
+        "0000000",
+        "0004400",
+        "0444000",
+        "4400000",
+        "0044000",
+        "0000440",
+        "0000044",
+    ],
+    "x_shape": [
+        "4000004",
+        "0400040",
+        "0040400",
+        "0004000",
+        "0040400",
+        "0400040",
+        "4000004",
+    ],
+    "checkmark": [
+        "0000001",
+        "0000011",
+        "0000110",
+        "0001100",
+        "0110000",
+        "1100000",
+        "1000000",
+    ],
+    "box": [
+        "4444444",
+        "4000004",
+        "4000004",
+        "4000004",
+        "4000004",
+        "4000004",
+        "4444444",
+    ],
+    "triangle_up": [
+        "0004000",
+        "0044400",
+        "0444440",
+        "4444444",
+        "0000000",
+        "0000000",
+        "0000000",
+    ],
+    "triangle_down": [
+        "0000000",
+        "0000000",
+        "0000000",
+        "4444444",
+        "0444440",
+        "0044400",
+        "0004000",
     ]
 }
 
@@ -130,8 +167,8 @@ def calculate_dates(pattern_name, start_date=None):
         sys.exit(1)
     
     commit_plan = []
-    for week_idx, week in enumerate(pattern):
-        for day_idx, intensity in enumerate(week):
+    for day_idx, day_pattern in enumerate(pattern):
+        for week_idx, intensity in enumerate(day_pattern):
             if intensity != '0':
                 commit_date = start_date + datetime.timedelta(weeks=week_idx, days=day_idx)
                 commit_count = get_commits_for_intensity(int(intensity))
@@ -172,27 +209,43 @@ def preview_pattern(pattern_name):
         sys.exit(1)
     
     print(f"Preview of '{pattern_name}':")
-    print("  Su Mo Tu We Th Fr Sa")
-    for week_idx, week in enumerate(pattern):
+    
+    max_weeks = max(len(day_pattern) for day_pattern in pattern)
+    
+    print("    ", end="")
+    for week_idx in range(max_weeks):
         print(f"W{week_idx+1}", end=" ")
-        for day_idx, intensity in enumerate(week):
-            if intensity == '0':
-                print("⬜", end=" ")
-            elif intensity == '1':
-                print("🟩", end=" ")
-            elif intensity == '2':
-                print("🟨", end=" ")
-            elif intensity == '3':
-                print("🟧", end=" ")
-            elif intensity == '4':
-                print("🟥", end=" ")
-            else:
-                print("⬛", end=" ")
-        print()
+    print()
+    
+    # Print each row (day of week)
+    days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+    for day_idx, day_pattern in enumerate(pattern):
+        if day_idx < len(days):  # Only print for valid days
+            print(f"{days[day_idx]}: ", end="")
+            
+            # Print intensity for each week in this day
+            for week_idx in range(max_weeks):
+                if week_idx < len(day_pattern):
+                    intensity = day_pattern[week_idx]
+                    if intensity == '0':
+                        print("⬜", end=" ")
+                    elif intensity == '1':
+                        print("🟩", end=" ")
+                    elif intensity == '2':
+                        print("🟨", end=" ")
+                    elif intensity == '3':
+                        print("🟧", end=" ")
+                    elif intensity == '4':
+                        print("🟥", end=" ")
+                    else:
+                        print("⬛", end=" ")
+                else:
+                    print("⬜", end=" ")  # Empty for missing data
+            print()
 
 def main():
     import argparse
-    parser = argparse.ArgumentParser(description='Create GitHub contribution patterns')
+    parser = argparse.ArgumentParser(description='Create GitHub contribution patterns to make you look busy')
     parser.add_argument('pattern', choices=list(EMOJI_PATTERNS.keys()) + ['list', 'preview'], 
                         help='Pattern to create or "list" to show available patterns or "preview" to preview a pattern')
     parser.add_argument('--preview', help='Pattern to preview (with --pattern preview)')
